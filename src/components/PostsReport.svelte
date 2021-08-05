@@ -3,15 +3,15 @@
   import { fade } from 'svelte/transition';
   import { onMount, afterUpdate } from 'svelte';
 
+  let dateVal;
+  let dateSelect;
   let date = new Date();
 
   let previous = new Date();
   previous.setDate(date.getDate() - 1);
-  $: dayBefore = previous;
 
   let next = new Date();
   next.setDate(date.getDate() + 1);
-  $: dayAfter = next;
 
   const wp = new WPAPI({
     endpoint: 'https://www.conchovalleyhomepage.com/wp-json'
@@ -53,7 +53,7 @@
   $: userPosts = [];
 
   const getPosts = async () => {
-    return await wp.posts().param('after', new Date(date.toLocaleDateString())).param('before', new Date(dayAfter.toLocaleDateString())).perPage(100).get(async (error, data) => {
+    return await wp.posts().param('after', new Date(date.toLocaleDateString())).param('before', new Date(next.toLocaleDateString())).perPage(100).get(async (error, data) => {
       if(error) {
         console.error(error);
       }
@@ -78,12 +78,18 @@
   };
 
   const updatePosts = async() => {
-    userPosts = [];
+    
+    Object.values(users).forEach((user) => {
+      user.postCount = 0;
+      user.postTimes = [];
+    });
+
+
     getPosts().then((data) => {
       getPostsWithUsers(data);
       
       const manicured = Object.values(users).map((user) => {
-        console.log(user.postTimes)
+        // console.log(user.postTimes)
         return {
           "Name": user.name,
           "Post Count": user.postCount,
@@ -101,16 +107,18 @@
   }
 
   const changeDate = (event) => {
-
+    console.log('dateVal: ', dateVal);
     if(event.target.value !== '' || event.target.value !== undefined) {
       let correct = new Date(event.target.value);
       correct.setDate(correct.getDate() + 1);
       setDate(correct);
-      console.log('set date: ', date);
       previous.setDate(date.getDate() - 1);
       next.setDate(date.getDate() + 1);
       updatePosts();
+    } else {
+      return;
     }
+    dateSelect.blur();
   };
 
   onMount(() => {
@@ -124,7 +132,7 @@
     <div class="datepicker-toggle-button">
 
     </div>
-    <input type="date" on:change={changeDate}>
+    <input type="date" bind:this={dateSelect} bind:value={dateVal} on:change={changeDate}>
   </div>
 </div>
 <section class="report">
@@ -142,7 +150,7 @@
         <summary>Post Times</summary>
         <ol class="times">
           {#each user["Post Times"] as time}
-            <li>{time}</li>
+            <li>{new Date(time).toLocaleTimeString()}</li>
           {/each}
         </ol>
       </details>
@@ -160,7 +168,7 @@
 
   .report {
     margin-top: 0.5rem;
-    border: 1px solid var(--color-light);
+    border: 1px solid var(--dark);
   }
 
   .report-header {
@@ -168,19 +176,28 @@
   }
 
   :global(.even) {
-    background: hsl(var(--dark-hs), 15%);
+    background: hsl(var(--light-hs), 88%);
   }
   :global(.odd) {
-    background: var(--dark);
+    /* light l = 98% */
+    background: var(--light);
   }
   .row {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     padding: 0.5rem;
   }
+
+  .row > *:nth-child(2) {
+    text-align: center;
+  }
+
+  .row > *:nth-child(3) {
+    text-align: right;
+  }
   .table-header {
-    border-bottom: 1px solid var(--color-light)
+    border-bottom: 1px solid var(--dark)
   }
 
   .report-control {
@@ -191,7 +208,7 @@
   }
 
   .datepicker-toggle {
-    color: #fff;
+    color: var(--dark);
     display: inline-block;
     position: relative;
     width: 24px;
@@ -217,9 +234,7 @@
     opacity: 0;
     cursor: pointer;
     box-sizing: border-box;
-    background: var(--color-dark);
     color: #fff;
-    border: 1px solid var(--color-light);
     padding: 0.5rem;
   }
 
@@ -240,6 +255,27 @@
   .times li {
     padding: 0.5rem;
     margin: 0;
-    border-bottom: 1px solid var(--color-light);
+    /* border-bottom: 1px solid var(--dark); */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .report {
+      border-color: hsl(var(--light-hs), 50%);
+    }
+    :global(.even) {
+      background: hsl(var(--dark-hs), 15%);
+    }
+    :global(.odd) {
+      background: var(--dark);
+    }
+    .table-header {
+      border-color: hsl(var(--light-hs), 50%);
+    }
+    .datepicker-toggle {
+      color: var(--light);
+    }
+    .times li {
+      border-color: hsl(var(--light-hs), 50%);
+    }
   }
 </style>

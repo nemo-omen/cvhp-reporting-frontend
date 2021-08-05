@@ -10,16 +10,18 @@
   font-size: clamp(0.875rem, 0.4626rem + 1.0309vw + var(--user-font-scale), 1.125rem);
   --dark: #111827;
   --dark-hs: 221, 39%;
+  --light: #f9fafb;
+  --light-hs: 210, 20%;
 }
 
 body {
-  background: #f9fafb;
-  color: #111827;
+  background: var(--light);
+  color: var(--dark);
 }
 
 @media (prefers-color-scheme: dark) {
   body {
-    background: #111827;
-    color: #fff;
+    background: var(--dark);
+    color: var(--light);
   }
 }
