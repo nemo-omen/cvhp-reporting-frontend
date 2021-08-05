@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
   import { onMount, afterUpdate } from 'svelte';
 
-  let date = new Date(Date.now());
+  let date = new Date();
 
   let previous = new Date();
   previous.setDate(date.getDate() - 1);
@@ -96,14 +96,25 @@
     });
   };
 
+  const setDate = (newDate) => {
+    date = new Date(newDate);
+  }
+
   const changeDate = (event) => {
-    date = new Date(event.target.value);
-    previous.setDate(date.getDate() - 1);
-    next.setDate(date.getDate() + 1);
-    updatePosts();
+
+    if(event.target.value !== '' || event.target.value !== undefined) {
+      let correct = new Date(event.target.value);
+      correct.setDate(correct.getDate() + 1);
+      setDate(correct);
+      console.log('set date: ', date);
+      previous.setDate(date.getDate() - 1);
+      next.setDate(date.getDate() + 1);
+      updatePosts();
+    }
   };
 
   onMount(() => {
+    setDate(new Date(Date.now()));
     updatePosts();
   });
 </script>
