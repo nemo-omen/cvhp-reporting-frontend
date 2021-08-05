@@ -1,15 +1,17 @@
 <script>
   import WPAPI from 'wpapi';
   import { fade } from 'svelte/transition';
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
 
   let date = new Date(Date.now());
 
-  let dayBefore = new Date();
-  dayBefore.setDate(date.getDate() - 1);
+  let previous = new Date();
+  previous.setDate(date.getDate() - 1);
+  $: dayBefore = previous;
 
-  let dayAfter = new Date();
-  dayAfter.setDate(date.getDate() + 1);
+  let next = new Date();
+  next.setDate(date.getDate() + 1);
+  $: dayAfter = next;
 
   const wp = new WPAPI({
     endpoint: 'https://www.conchovalleyhomepage.com/wp-json'
@@ -75,11 +77,8 @@
     });
   };
 
-  const changeDate = (event) => {
-    console.log(event.target.value);
-  };
-
-  onMount(() => {
+  const updatePosts = async() => {
+    userPosts = [];
     getPosts().then((data) => {
       getPostsWithUsers(data);
       
@@ -95,6 +94,17 @@
       userPosts = [...manicured];
       console.log(userPosts);
     });
+  };
+
+  const changeDate = (event) => {
+    date = new Date(event.target.value);
+    previous.setDate(date.getDate() - 1);
+    next.setDate(date.getDate() + 1);
+    updatePosts();
+  };
+
+  onMount(() => {
+    updatePosts();
   });
 </script>
 <div class="report-control">
