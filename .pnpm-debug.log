@@ -1,0 +1,52 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "@example/starter",
+      "version": "0.0.1",
+      "private": true,
+      "scripts": {
+        "start": "astro dev",
+        "build": "astro build"
+      },
+      "devDependencies": {
+        "astro": "^0.18.8"
+      }
+    },
+    "prefix": "/home/trainingmontage/dev/projects/cvhp-reporting-frontend"
+  },
+  "2 debug pnpm:context": {
+    "currentLockfileExists": false,
+    "storeDir": "/home/trainingmontage/.pnpm-store/v3",
+    "virtualStoreDir": "/home/trainingmontage/dev/projects/cvhp-reporting-frontend/node_modules/.pnpm"
+  },
+  "3 debug pnpm:stage": {
+    "prefix": "/home/trainingmontage/dev/projects/cvhp-reporting-frontend",
+    "stage": "resolution_started"
+  },
+  "4 debug pnpm:update-check": {
+    "currentVersion": "6.9.1",
+    "latestVersion": "6.11.5"
+  },
+  "5 error pnpm": {
+    "code": "ERR_PNPM_FETCH_404",
+    "hint": "@astro/renderer-svelte is not in the npm registry, or you have no permission to fetch it.\n\nNo authorization header was set for the request.",
+    "request": {
+      "url": "https://registry.npmjs.org/@astro%2Frenderer-svelte"
+    },
+    "response": {
+      "size": 0,
+      "timeout": 60000
+    },
+    "pkgName": "@astro/renderer-svelte",
+    "pkgsStack": [],
+    "err": {
+      "name": "Error",
+      "message": "GET https://registry.npmjs.org/@astro%2Frenderer-svelte: Not Found - 404",
+      "code": "ERR_PNPM_FETCH_404",
+      "stack": "Error: GET https://registry.npmjs.org/@astro%2Frenderer-svelte: Not Found - 404\n    at RetryOperation._fn (/home/trainingmontage/.nvm/versions/node/v16.3.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.9.1/node_modules/pnpm/dist/pnpm.cjs:78997:18)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)"
+    }
+  }
+}
