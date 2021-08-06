@@ -231,6 +231,7 @@
     width: 100%;
     height: 100%;
     background-image: url('/images/calendar.svg');
+    color: var(--dark);
   }
   
   input[type=date] {
@@ -279,7 +280,7 @@
     .table-header {
       border-color: hsl(var(--light-hs), 50%);
     }
-    .datepicker-toggle {
+    .datepicker-toggle-button {
       color: var(--light);
     }
     .times li {
