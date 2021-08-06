@@ -149,12 +149,12 @@
     <h3>Post Times</h3>
   </div>
   {#if isLoading}
-    <div class="bar" in:slide={{delay: 300}} out:slide></div>
+    <div class="bar" in:slide={{delay: 100}} out:slide></div>
   {/if}
   <div class="table-body">
     {#if !isLoading}
       {#each userPosts as user, index}
-      <div class="user row {index % 2 === 0 ? 'even' : 'odd'}">
+      <div class="user row {index % 2 === 0 ? 'even' : 'odd'}" transition:slide>
         <h3>{user["Name"]}</h3>
         <p>{user["Post Count"]}</p>
         <details>
@@ -293,9 +293,10 @@
   }
 
   .bar {
-    height: 2px;
+    display: block;
+    height: 0.25rem;
     min-width: 100%;
-    background: linear-gradient(270deg, #111827, #f9fafb);
+    background: linear-gradient(90deg,#ffd33d,#ea4aaa 17%,#b34bff 34%,#01feff 51%,#ffd33d 68%,#ea4aaa 85%,#b34bff);
       background-size: 600% 600%;
 
       -webkit-animation: loading 2s ease infinite;
@@ -304,18 +305,15 @@
   }
 
   @-webkit-keyframes loading {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
+    0%{background-position: 100%}
+    100%{background-position: 0}
   }
   @-moz-keyframes loading {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
+    0%{background-position: 100%}
+    100%{background-position: 0}
   }
   @keyframes loading {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
+    0%{background-position: 100%}
+    100%{background-position: 0}
   }
 </style>
