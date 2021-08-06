@@ -17,6 +17,7 @@
 body {
   background: var(--light);
   color: var(--dark);
+  overflow-y: scroll;
 }
 
 @media (prefers-color-scheme: dark) {

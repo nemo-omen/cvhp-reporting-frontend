@@ -5,6 +5,9 @@
 
   let dateVal;
   let dateSelect;
+
+  let isLoading = false;
+
   let date = new Date();
 
   let previous = new Date();
@@ -53,13 +56,17 @@
   $: userPosts = [];
 
   const getPosts = async () => {
+    isLoading = true;
+
     return await wp.posts().param('after', new Date(date.toLocaleDateString())).param('before', new Date(next.toLocaleDateString())).perPage(100).get(async (error, data) => {
       if(error) {
         console.error(error);
       }
 
+      isLoading = false;
       return await data;
     });
+    
   };
 
 
@@ -78,7 +85,6 @@
   };
 
   const updatePosts = async() => {
-    
     Object.values(users).forEach((user) => {
       user.postCount = 0;
       user.postTimes = [];
@@ -98,8 +104,7 @@
       });
 
       userPosts = [...manicured];
-      console.log(userPosts);
-    });
+    }).catch((error) => console.error(error));
   };
 
   const setDate = (newDate) => {
@@ -107,9 +112,10 @@
   }
 
   const changeDate = (event) => {
-    console.log('dateVal: ', dateVal);
-    if(event.target.value !== '' || event.target.value !== undefined) {
-      let correct = new Date(event.target.value);
+    console.log(dateVal);
+    if(dateVal) {
+      console.log('yep');
+      let correct = new Date(dateVal);
       correct.setDate(correct.getDate() + 1);
       setDate(correct);
       previous.setDate(date.getDate() - 1);
@@ -142,20 +148,22 @@
     <h3>Post Times</h3>
   </div>
   <div class="table-body">
-    {#each userPosts as user, index}
-    <div class="user row {index % 2 === 0 ? 'even' : 'odd'}">
-      <h3>{user["Name"]}</h3>
-      <p>{user["Post Count"]}</p>
-      <details>
-        <summary>Post Times</summary>
-        <ol class="times">
-          {#each user["Post Times"] as time}
-            <li>{new Date(time).toLocaleTimeString()}</li>
-          {/each}
-        </ol>
-      </details>
-    </div>
-    {/each}
+    {#if !isLoading}
+      {#each userPosts as user, index}
+      <div class="user row {index % 2 === 0 ? 'even' : 'odd'}">
+        <h3>{user["Name"]}</h3>
+        <p>{user["Post Count"]}</p>
+        <details>
+          <summary>Post Times</summary>
+          <ol class="times">
+            {#each user["Post Times"] as time}
+              <li>{new Date(time).toLocaleString()}</li>
+            {/each}
+          </ol>
+        </details>
+      </div>
+      {/each}
+    {/if}
   </div>
 </section>
 
