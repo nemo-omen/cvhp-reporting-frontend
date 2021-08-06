@@ -1,7 +1,8 @@
 <script>
   import WPAPI from 'wpapi';
-  import { fade } from 'svelte/transition';
+  import { fade, slide } from 'svelte/transition';
   import { onMount, afterUpdate } from 'svelte';
+  import DatepickerIcon from './DatepickerIcon.svelte';
 
   let dateVal;
   let dateSelect;
@@ -136,7 +137,7 @@
   <h2 class="report-header">{date.toLocaleDateString()}</h2>
   <div class="datepicker-toggle">
     <div class="datepicker-toggle-button">
-
+      <DatepickerIcon />
     </div>
     <input type="date" bind:this={dateSelect} bind:value={dateVal} on:change={changeDate}>
   </div>
@@ -147,6 +148,9 @@
     <h3>Posts</h3>
     <h3>Post Times</h3>
   </div>
+  {#if isLoading}
+    <div class="bar" in:slide={{delay: 300}} out:slide></div>
+  {/if}
   <div class="table-body">
     {#if !isLoading}
       {#each userPosts as user, index}
@@ -230,7 +234,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/images/calendar.svg');
+    /* background-image: url('/images/calendar.svg'); */
     color: var(--dark);
   }
   
@@ -286,5 +290,32 @@
     .times li {
       border-color: hsl(var(--light-hs), 50%);
     }
+  }
+
+  .bar {
+    height: 2px;
+    min-width: 100%;
+    background: linear-gradient(270deg, #111827, #f9fafb);
+      background-size: 600% 600%;
+
+      -webkit-animation: loading 2s ease infinite;
+      -moz-animation: loading 2s ease infinite;
+      animation: loading 2s ease infinite;
+  }
+
+  @-webkit-keyframes loading {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+  @-moz-keyframes loading {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+  @keyframes loading {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
   }
 </style>
